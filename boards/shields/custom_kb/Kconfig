@@ -1,0 +1,3 @@
+config ZMK_KEYBOARD_CUSTOM_KB
+    bool "Custom keyboard"
+    default y
