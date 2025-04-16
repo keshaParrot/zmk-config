@@ -10,6 +10,7 @@
     &uart0 {
         current-speed = <115200>;
         status = "okay";
+        tx-pin = <8>;  // P0.08 ← RX від STM32
         rx-pin = <6>;  /* P0.06 — RX від STM32 TX */
         hw-flow-control;
     };
