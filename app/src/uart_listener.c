@@ -5,6 +5,26 @@
 #include <zmk/event_manager.h>
 #include <zmk/events/led_indicator_changed.h>
 
+// test code
+#include <logging/log.h>
+LOG_MODULE_DECLARE(main);
+
+static void uart_cb(const struct device *dev, void *user_data) {
+    uart_irq_update(dev);
+    while (uart_irq_rx_ready(dev)) {
+        uart_fifo_read(dev, buf, 1);
+        LOG_INF("Got UART byte: 0x%02X", buf[0]);
+
+        uint8_t code = buf[0];
+        if (code & 0x80) {
+            zmk_hid_release(code & 0x7F);
+        } else {
+            zmk_hid_press(code);
+        }
+    }
+}
+
+// end of test code 
 
 #define UART_NODE DT_NODELABEL(uart0)
 const struct device *uart = DEVICE_DT_GET(UART_NODE);
