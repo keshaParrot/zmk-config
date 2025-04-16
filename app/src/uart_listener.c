@@ -2,6 +2,9 @@
 #include <zephyr/device.h>
 #include <zephyr/drivers/uart.h>
 #include <zmk/hid.h>
+#include <zmk/event_manager.h>
+#include <zmk/events/led_indicator_changed.h>
+
 
 #define UART_NODE DT_NODELABEL(uart0)
 const struct device *uart = DEVICE_DT_GET(UART_NODE);
@@ -21,6 +24,23 @@ static void uart_cb(const struct device *dev, void *user_data) {
         }
     }
 }
+
+static int led_event_listener(const struct zmk_event_header *eh) {
+    const struct zmk_led_indicator_changed *ev = as_zmk_led_indicator_changed(eh);
+
+    uint8_t report = 0;
+
+    if (ev->caps_lock) report |= 0x01;
+    if (ev->num_lock)  report |= 0x02;
+    if (ev->scroll_lock) report |= 0x04;
+
+    uart_poll_out(uart, 0xC0 | report);
+
+    return 0;
+}
+ZMK_LISTENER(led_uart, led_event_listener);
+ZMK_SUBSCRIPTION(led_uart, zmk_led_indicator_changed);
+
 
 int uart_listener_init(void) {
     if (!device_is_ready(uart)) return -1;
