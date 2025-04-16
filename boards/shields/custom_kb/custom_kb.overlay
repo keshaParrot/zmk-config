@@ -1,15 +1,16 @@
 / {
-    zmk,keyboard {
-        compatible = "zmk,keyboard";
-        matrix {
-            rows = <5>;
-            cols = <16>;
-            row-gpios = <&gpio0 17 GPIO_ACTIVE_LOW>,
-                        <&gpio0 20 GPIO_ACTIVE_LOW>,
-                        <&gpio0 22 GPIO_ACTIVE_LOW>,
-                        <&gpio0 24 GPIO_ACTIVE_LOW>,
-                        <&gpio1 00 GPIO_ACTIVE_LOW>;
-            debounce-delay-ms = <5>;
-        };
+    aliases {
+        uart0 = &uart0;
+    };
+
+    chosen {
+        zephyr,console = &uart0;
+    };
+
+    &uart0 {
+        current-speed = <115200>;
+        status = "okay";
+        rx-pin = <6>;  /* P0.06 — RX від STM32 TX */
+        hw-flow-control;
     };
 };
