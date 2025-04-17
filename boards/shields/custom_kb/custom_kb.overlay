@@ -4,14 +4,21 @@
     };
 
     chosen {
-        zephyr,console = &uart0;
+        zephyr,console = &cdc_acm_uart0;
     };
+};
 
-    &uart0 {
-        current-speed = <115200>;
-        status = "okay";
-        tx-pin = <8>;  // P0.08 ← RX від STM32
-        rx-pin = <6>;  /* P0.06 — RX від STM32 TX */
-        hw-flow-control;
+&zephyr_udc0 {
+    cdc_acm_uart0: cdc_acm_uart0 {
+        compatible = "zephyr,cdc-acm-uart";
+        label = "CDC_ACM_0";
     };
+};
+
+&uart0 {
+    current-speed = <115200>;
+    status = "okay";
+    tx-pin = <8>;    /* P0.08 ← RX от STM32 (PA11) */
+    rx-pin = <6>;    /* P0.06 → TX к STM32 (PA12) */
+    hw-flow-control;
 };
