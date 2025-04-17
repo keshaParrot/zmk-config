@@ -14,7 +14,7 @@
 &uart0 {
     status        = "okay";
     current-speed = <115200>;
-    tx-pin        = <8>;  /* P0.08 ← STM32 PA11 */
-    rx-pin        = <6>;  /* P0.06 → STM32 PA12 */
+    tx-pin        = <8>;  /* P0.08 ← TX_STM32? */
+    rx-pin        = <6>;  /* P0.06 → RX_STM32? */
     hw-flow-control;
 };

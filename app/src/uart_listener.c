@@ -18,11 +18,8 @@ static void uart_cb(const struct device *dev, void *user_data) {
         uart_fifo_read(dev, buf, 1);
         LOG_INF("Got UART byte: 0x%02X", buf[0]);
         uint8_t code = buf[0];
-        if (code & 0x80) {
-            zmk_hid_release(code & 0x7F);
-        } else {
-            zmk_hid_press(code);
-        }
+        if (code & 0x80) zmk_hid_release(code & 0x7F);
+        else             zmk_hid_press(code);
     }
 }
 
@@ -40,7 +37,7 @@ ZMK_SUBSCRIPTION(led_uart, zmk_led_indicator_changed);
 static int uart_listener_init(const struct device *dev) {
     ARG_UNUSED(dev);
     if (!device_is_ready(uart)) {
-        LOG_ERR("UART0 device not ready");
+        LOG_ERR("UART0 not ready");
         return -ENODEV;
     }
     uart_irq_callback_user_data_set(uart, uart_cb, NULL);
